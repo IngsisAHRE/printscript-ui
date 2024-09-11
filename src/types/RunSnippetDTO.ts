@@ -9,6 +9,6 @@ export type RunSnippetDTO = {
 }
 
 export type RunSnippetResponse = {
-    output:string[],
+    outputs:string[],
     errors:string[]
 }

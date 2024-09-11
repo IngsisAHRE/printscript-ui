@@ -1,9 +1,9 @@
 import api from './api';
 import {SnippetOperations} from "../utils/snippetOperations.ts";
-import { CreateSnippet, PaginatedSnippets, Snippet, UpdateSnippet, parseCompliance} from "../utils/snippet.ts";
+import {CreateSnippet, PaginatedSnippets, parseCompliance, Snippet, UpdateSnippet} from "../utils/snippet.ts";
 import {FriendUserDTO, PaginatedUsers, User} from "../utils/users.ts";
 import {Rule} from "../types/Rule.ts";
-import {TestCase, CreateTestCase} from "../types/TestCase.ts";
+import {CreateTestCase, TestCase} from "../types/TestCase.ts";
 import {TestCaseResult} from "../utils/queries.tsx";
 import {FileType} from "../types/FileType.ts";
 import {BACKEND_URL, RUNNER_URL} from "../utils/constants.ts";
@@ -14,7 +14,8 @@ export class SnippetService implements SnippetOperations {
         const response = await api.get(`${BACKEND_URL}/snippets`, {
             params: { page_number, page_size, snippetName }
         });
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         response.data.snippets = response.data.snippets.map(snippet => ({
             ...snippet,
             compliance: parseCompliance(snippet.status)
@@ -118,7 +119,7 @@ export class SnippetService implements SnippetOperations {
     }
 
     async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
-        const response = await api.put<Rule[]>('${BACKEND_URL}/rules', newRules.map(rule => ({ 
+        const response = await api.put<Rule[]>(`${BACKEND_URL}/rules`, newRules.map(rule => ({
             id: rule.id,
             active: rule.isActive,
             value: rule.value,

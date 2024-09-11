@@ -1,7 +1,7 @@
 import {OutlinedInput} from "@mui/material";
 import {highlight, languages} from "prismjs";
 import Editor from "react-simple-code-editor";
-import {Bòx} from "../components/snippet-table/SnippetBox.tsx";
+import {SnippetBox} from "../components/snippet-table/SnippetBox.tsx";
 import {useEffect, useState} from "react";
 import {useExecSnippet} from "../utils/queries.tsx";
 
@@ -31,8 +31,8 @@ export const SnippetExecution = ({ content, setRunSnippet, runSnippet } : RunSni
             setInputList(newInputList);
             setInput('');
             execute(newInputList);
+            console.log(inputList)
         }
-        console.log(inputList)
     };
 
     const execute = (inputList: string[]) => {
@@ -43,8 +43,11 @@ export const SnippetExecution = ({ content, setRunSnippet, runSnippet } : RunSni
             inputs:inputList,
             envs: [],
         }).then(response  => {
-            setOutput(response.output.join(`\n`));
-            setRunSnippet(false);
+            if (output === response.outputs.join(`\n`)) {
+                setInputList([]);
+                setRunSnippet(false);
+            }
+            setOutput(response.outputs.join(`\n`));
         }).catch(error => {
             setOutput(error.response.data.output);
             setRunSnippet(false);
@@ -54,7 +57,7 @@ export const SnippetExecution = ({ content, setRunSnippet, runSnippet } : RunSni
 
     return (
       <>
-        <Bòx flex={1} overflow={"none"} minHeight={200} bgcolor={'black'} color={'white'} code={output}>
+        <SnippetBox flex={1} overflow={"none"} minHeight={200} bgcolor={'black'} color={'white'} code={output}>
             <Editor
               value={output}
               padding={10}
@@ -66,7 +69,7 @@ export const SnippetExecution = ({ content, setRunSnippet, runSnippet } : RunSni
                   fontSize: 17,
               }}
             />
-        </Bòx>
+        </SnippetBox>
         <OutlinedInput onKeyDown={handleEnter} value={input} onChange={e => setInput(e.target.value)} placeholder="Type here" fullWidth/>
       </>
     )

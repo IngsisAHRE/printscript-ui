@@ -6,7 +6,7 @@ type SnippetBoxProps = {
   children: ReactNode;
 } & BoxProps
 
-const SnippetBox = (props: SnippetBoxProps) => {
+export const SnippetBox = (props: SnippetBoxProps) => {
   const {code, children} = props;
   const [showBox, setShowBox] = useState(false)
 
@@ -23,7 +23,7 @@ const SnippetBox = (props: SnippetBoxProps) => {
       <Box {...props}>
         {
           showBox ? (
-              <></> // Add easter egg here
+              <>zzzz</> // Add easter egg here
           ) : children
         }
       </Box>
@@ -31,5 +31,3 @@ const SnippetBox = (props: SnippetBoxProps) => {
 
 
 }
-
-export const Bòx = SnippetBox
