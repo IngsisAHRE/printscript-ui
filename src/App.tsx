@@ -1,12 +1,14 @@
 import './App.css';
-import { RouterProvider } from "react-router";
-import { createBrowserRouter } from "react-router-dom";
+import {RouterProvider} from "react-router";
+import {createBrowserRouter} from "react-router-dom";
 import HomeScreen from "./screens/Home.tsx";
-import { QueryClient, QueryClientProvider } from "react-query";
+import {QueryClient, QueryClientProvider} from "react-query";
 import RulesScreen from "./screens/Rules.tsx";
 import ProfileScreen from "./screens/Profile.tsx";
-import { useAuth0 } from "@auth0/auth0-react";
+import {useAuth0} from "@auth0/auth0-react";
 import {ReactNode, useEffect} from "react";
+import {jwtDecode, JwtPayload} from "jwt-decode";
+import {FRONTEND_URL} from "./utils/constants.ts";
 
 const router = createBrowserRouter([
     {
@@ -26,14 +28,22 @@ const router = createBrowserRouter([
 export const queryClient = new QueryClient()
 
 const AuthWrapper = ({ children } : { children : ReactNode}) => {
-    const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+    const { isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
 
     useEffect(() => {
         const getAndStoreToken = async () => {
             if (isAuthenticated) {
                 try {
                     const token = await getAccessTokenSilently();
-                    localStorage.setItem('auth0_token', token);
+                    const decodedToken: JwtPayload = jwtDecode(token);
+                    const currentTime = Date.now() / 1000;
+
+                    if (decodedToken.exp! < currentTime) {
+                        localStorage.removeItem('auth0_token');
+                        await logout({logoutParams:{returnTo: FRONTEND_URL}});
+                    } else {
+                        localStorage.setItem('auth0_token', token);
+                    }
                 } catch (error) {
                     console.error("Error getting access token", error);
                 }
@@ -41,7 +51,7 @@ const AuthWrapper = ({ children } : { children : ReactNode}) => {
         };
 
         getAndStoreToken();
-    }, [isAuthenticated, getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently, logout]);
 
     return children;
 };

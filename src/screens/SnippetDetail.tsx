@@ -6,11 +6,8 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism-okaidia.css";
 import {Alert, Box, CircularProgress, IconButton, Tooltip, Typography} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  useUpdateSnippetById
-} from "../utils/queries.tsx";
-import {useFormatSnippet, useGetSnippetById, useShareSnippet} from "../utils/queries.tsx";
-import {Bòx} from "../components/snippet-table/SnippetBox.tsx";
+import {useFormatSnippet, useGetSnippetById, useShareSnippet, useUpdateSnippetById} from "../utils/queries.tsx";
+import {SnippetBox} from "../components/snippet-table/SnippetBox.tsx";
 import {BugReport, Delete, Download, PlayArrow, Save, Share, StopRounded} from "@mui/icons-material";
 import {ShareSnippetModal} from "../components/snippet-detail/ShareSnippetModal.tsx";
 import {TestSnippetModal} from "../components/snippet-test/TestSnippetModal.tsx";
@@ -130,7 +127,7 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
               </Tooltip>
             </Box>
             <Box display={"flex"} gap={2}>
-              <Bòx flex={1} height={"fit-content"} overflow={"none"} minHeight={"500px"} bgcolor={'black'} color={'white'} code={code}>
+              <SnippetBox flex={1} height={"fit-content"} overflow={"none"} minHeight={"500px"} bgcolor={'black'} color={'white'} code={code}>
                 <Editor
                     value={code}
                     padding={10}
@@ -143,7 +140,7 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
                       fontSize: 17,
                     }}
                 />
-              </Bòx>
+              </SnippetBox>
             </Box>
             <Box pt={1} flex={1} marginTop={2}>
               <Alert severity="info">Output</Alert>

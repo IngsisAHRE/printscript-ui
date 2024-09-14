@@ -9,7 +9,7 @@ export type User = {
   id: string
 }
 
-export type FriendUserDTO = {
+export type UserFriendsDTO = {
   users: FriendDTO[],
   total: number,
 }

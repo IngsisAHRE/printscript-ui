@@ -1,7 +1,7 @@
 import api from './api';
 import {SnippetOperations} from "../utils/snippetOperations.ts";
 import {CreateSnippet, PaginatedSnippets, parseCompliance, Snippet, UpdateSnippet} from "../utils/snippet.ts";
-import {FriendUserDTO, PaginatedUsers, User} from "../utils/users.ts";
+import {User, UserFriendsDTO} from "../utils/users.ts";
 import {Rule} from "../types/Rule.ts";
 import {CreateTestCase, TestCase} from "../types/TestCase.ts";
 import {TestCaseResult} from "../utils/queries.tsx";
@@ -38,11 +38,11 @@ export class SnippetService implements SnippetOperations {
         return response.data;
     }
 
-    async getUserFriends(name?: string, page_number?: number, page_size?: number): Promise<PaginatedUsers> {
-        const response = await api.get<FriendUserDTO>(`${BACKEND_URL}/users`, {
-            params: { name, page_number, page_size }
+    async getUserFriends(name?: string): Promise<User[]> {
+        const response = await api.get<UserFriendsDTO>(`${BACKEND_URL}/users`, {
+            params: { name }
         });
-        return {users: response.data.users.map((user) => ({ id: user.user_id, name: user.nickname } as User)), page: page_number || 1, page_size: page_size || 5, count: response.data.total};
+        return response.data.users.map((user) => ({ id: user.user_id, name: user.nickname } as User));
     }
 
     async shareSnippet(snippetId: string, userId: string): Promise<Snippet> {
@@ -82,9 +82,9 @@ export class SnippetService implements SnippetOperations {
             id: testCase.id,
             snippetId: snippetId, 
             name: testCase.name!,
-            inputs: testCase.input! || [], 
-            expectedOutputs: testCase.output! || [],
-            envs: testCase.envVars?.split(';')
+            inputs: testCase.inputs! || [],
+            expectedOutputs: testCase.expectedOutputs! || [],
+            envs: testCase.envs?.split(';')
                 .filter(pair => pair.trim() !== '')
                 .map((pair) => {
                     const [key, value] = pair.split('=');

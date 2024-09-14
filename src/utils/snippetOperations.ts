@@ -1,5 +1,5 @@
 import {CreateSnippet, PaginatedSnippets, Snippet, UpdateSnippet} from './snippet'
-import {PaginatedUsers} from "./users.ts";
+import {User} from "./users.ts";
 import {TestCase} from "../types/TestCase.ts";
 import {TestCaseResult} from "./queries.tsx";
 import {FileType} from "../types/FileType.ts";
@@ -15,7 +15,7 @@ export interface SnippetOperations {
 
   updateSnippetById(id: string, updateSnippet: UpdateSnippet): Promise<Snippet>
 
-  getUserFriends(name?: string,page?: number,pageSize?: number): Promise<PaginatedUsers>
+  getUserFriends(name?: string): Promise<User[]>
 
   shareSnippet(snippetId: string,userId: string): Promise<Snippet>
 

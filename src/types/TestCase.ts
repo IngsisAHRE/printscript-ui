@@ -1,9 +1,9 @@
 export type TestCase = {
     id: string;
     name: string;
-    input?: string[];
-    output?: string[];
-    envVars?: string;
+    inputs?: string[];
+    expectedOutputs?: string[];
+    envs?: string;
 };
 
 export type CreateTestCase = {

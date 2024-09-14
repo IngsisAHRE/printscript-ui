@@ -14,12 +14,15 @@ export const ShareSnippetModal = (props: ShareSnippetModalProps) => {
   const {open, onClose, onShare, loading} = props
   const [name, setName] = useState("")
   const [debouncedName, setDebouncedName] = useState("")
-  const {data, isLoading} = useGetUsers(debouncedName, 0, 5)
+  const {data, isLoading} = useGetUsers(debouncedName)
+  const [isTyping, setIsTyping] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | undefined>()
 
   useEffect(() => {
+    setIsTyping(true)
     const getData = setTimeout(() => {
       setDebouncedName(name)
+      setIsTyping(false)
     }, 3000)
     return () => clearTimeout(getData)
   }, [name])
@@ -35,12 +38,12 @@ export const ShareSnippetModal = (props: ShareSnippetModalProps) => {
         <Box mt={2}>
           <Autocomplete
               renderInput={(params) => <TextField {...params} label="Type the user's name"/>}
-              options={data?.users ?? []}
+              options={data || []}
               isOptionEqualToValue={(option, value) =>
                   option.id === value.id
               }
               getOptionLabel={(option) => option.name}
-              loading={isLoading}
+              loading={isLoading || isTyping}
               value={selectedUser}
               onInputChange={(_: unknown, newValue: string | null) => newValue && setName(newValue)}
               onChange={(_: unknown, newValue: User | null) => handleSelectUser(newValue)}
