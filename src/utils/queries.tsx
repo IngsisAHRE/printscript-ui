@@ -7,11 +7,20 @@ import {FileType} from "../types/FileType.ts";
 import {Rule} from "../types/Rule.ts";
 import {SnippetService} from "../services/snippetService.ts";
 import {RunSnippetDTO} from "../types/RunSnippetDTO.ts";
+import {useAuth0} from "@auth0/auth0-react";
 
 const snippetOperations: SnippetOperations = new SnippetService()
 
 export const useGetSnippets = (page: number = 0, pageSize: number = 10, snippetName?: string) => {
-    return useQuery<PaginatedSnippets, Error>(['listSnippets', page, pageSize, snippetName], () => snippetOperations.listSnippetDescriptors(page, pageSize, snippetName));
+    const { isAuthenticated } = useAuth0();
+
+    return useQuery<PaginatedSnippets, Error>(
+        ['listSnippets', page, pageSize, snippetName],
+        () => snippetOperations.listSnippetDescriptors(page, pageSize, snippetName),
+        {
+            enabled: isAuthenticated, // Solo ejecuta si el usuario está autenticado
+        }
+    );
 };
 
 export const useGetSnippetById = (id: string) => {
