@@ -89,6 +89,8 @@ jobs:
           ssh ingsisAHRE@${{ secrets.DEV_IP }} << 'EOF'
             cd snippetInfra
             sudo su
+            docker container stop UI-reverse-proxy
+            docker container rm UI-reverse-proxy
             docker-compose -f docker-compose.dev.yml pull UI-reverse-proxy
             docker-compose -f docker-compose.dev.yml up -d UI-reverse-proxy
             docker image prune -f
