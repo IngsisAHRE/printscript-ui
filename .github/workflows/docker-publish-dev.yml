@@ -49,6 +49,13 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_FRONTEND_URL=${{ variables.DEV_FRONTEND_URL }}
+            VITE_BACKEND_URL=${{ variables.OPERATIONS_URL }}
+            VITE_RUNNER_URL=${{ variables.RUNNER_URL }}
+            VITE_AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}
+            VITE_AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}
+            VITE_AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}
 
 
     # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)."
