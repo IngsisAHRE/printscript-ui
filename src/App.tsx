@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <HomeScreen />
     },
     {
-        path: "/rules",
+        path: "/user-rules",
         element: <PrivateRoute><RulesScreen /></PrivateRoute>
     },
     {
