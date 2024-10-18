@@ -19,7 +19,7 @@ const pages: PageType[] = [{
     icon: <Code/>
 }, {
     title: 'Rules',
-    path: '/rules',
+    path: '/user-rules',
     icon: <Rule/>
 }];
 
