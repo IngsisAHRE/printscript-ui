@@ -3,14 +3,14 @@ import {CreateSnippet} from "../../src/utils/snippet";
 
 describe('Home', () => {
   beforeEach(() => {
-    // cy.loginToAuth0( TODO DE-Comment when auth0 is ready
-    //     AUTH0_USERNAME,
-    //     AUTH0_PASSWORD
-    // )
+    cy.loginToAuth0(
+        AUTH0_USERNAME,
+        AUTH0_PASSWORD
+    )
   })
   before(() => {
-    process.env.FRONTEND_URL = Cypress.env("FRONTEND_URL");
-    process.env.BACKEND_URL = Cypress.env("BACKEND_URL");
+    process.env.FRONTEND_URL = Cypress.env("VITE_FRONTEND_URL");
+    process.env.BACKEND_URL = Cypress.env("VITE_BACKEND_URL");
   })
   it('Renders home', () => {
     cy.visit(FRONTEND_URL)
@@ -38,7 +38,7 @@ describe('Home', () => {
       name: "Test name",
       content: "print(1)",
       language: "printscript",
-      extension: ".ps"
+      extension: ".prs"
     }
 
     cy.intercept('GET', BACKEND_URL+"/snippets*", (req) => {
@@ -49,7 +49,10 @@ describe('Home', () => {
 
     cy.request({
       method: 'POST',
-      url: '/snippets', // Adjust if you have a different base URL configured in Cypress
+      url: `${BACKEND_URL}/snippets`,
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth0_token')}`
+      },
       body: snippetData,
       failOnStatusCode: false // Optional: set to true if you want the test to fail on non-2xx status codes
     }).then((response) => {

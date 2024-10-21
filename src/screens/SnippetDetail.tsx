@@ -31,7 +31,7 @@ const DownloadButton = ({snippet}: { snippet?: Snippet }) => {
       <IconButton sx={{
         cursor: "pointer"
       }}>
-        <a download={`${snippet.name}.prs`} target="_blank"
+        <a download={`${snippet.name}.${snippet.extension}`} target="_blank"
            rel="noreferrer" href={URL.createObjectURL(file)} style={{
           textDecoration: "none",
           color: "inherit",
