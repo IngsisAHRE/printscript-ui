@@ -51,15 +51,13 @@ export class SnippetService implements SnippetOperations {
     }
 
     async getFormatRules(): Promise<Rule[]> {
-        const response = await api.get(`${BACKEND_URL}/rules/FORMATTING`);
-        // @ts-ignore
-        return response.data.map(rule => ({ ...rule, isActive: rule.active }));
+        const response = await api.get<Rule[]>(`${BACKEND_URL}/rules/FORMATTING`);
+        return response.data;
     }
 
     async getLintingRules(): Promise<Rule[]> {
         const response = await api.get<Rule[]>(`${BACKEND_URL}/rules/LINTING`);
-        // @ts-ignore
-        return response.data.map(rule => ({ ...rule, isActive: rule.active }));
+        return response.data;
     }
 
     async getTestCases(snippetId: string): Promise<TestCase[]> {
@@ -67,9 +65,8 @@ export class SnippetService implements SnippetOperations {
         return response.data;
     }
 
-    async formatSnippet(content: string): Promise<string> {
-        const response = await api.post<{ formattedSnippet: string }>(`${BACKEND_URL}/run/format`, { content });
-        // @ts-ignore
+    async formatSnippet(content: string, language: string): Promise<string> {
+        const response = await api.post(`${BACKEND_URL}/run/format`, { content, language });
         return response.data;
     }
 
@@ -112,10 +109,8 @@ export class SnippetService implements SnippetOperations {
     }
 
     async getFileTypes(): Promise<FileType[]> {
-        return [{
-            language: "printscript",
-            extension: "prs",
-        }];
+        const response = await api.get<FileType[]>(`${RUNNER_URL}/runner/languages`);
+        return response.data
     }
 
     async modifyFormatRule(newRules: Rule[]): Promise<Rule[]> {
