@@ -31,7 +31,7 @@ const DownloadButton = ({snippet}: { snippet?: Snippet }) => {
       <IconButton sx={{
         cursor: "pointer"
       }}>
-        <a download={`${snippet.name}.prs`} target="_blank"
+        <a download={`${snippet.name}.${snippet.extension}`} target="_blank"
            rel="noreferrer" href={URL.createObjectURL(file)} style={{
           textDecoration: "none",
           color: "inherit",
@@ -50,7 +50,7 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
   const [code, setCode] = useState(
       ""
   );
-  const [shareModalOppened, setShareModalOppened] = useState(false)
+  const [shareModalOpened, setShareModalOpened] = useState(false)
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] = useState(false)
   const [testModalOpened, setTestModalOpened] = useState(false);
   const [runSnippet, setRunSnippet] = useState(false);
@@ -69,14 +69,16 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
   useEffect(() => {
     if (formatSnippetData) {
       setCode(formatSnippetData)
+      if (snippet)
+        snippet.content = formatSnippetData
     }
-  }, [formatSnippetData])
+  }, [formatSnippetData, snippet])
 
 
   async function handleShareSnippet(userId: string) {
     shareSnippet({snippetId: id, userId}, {
       onSuccess: () => {
-        setShareModalOppened(false)
+        setShareModalOpened(false)
     }, onError: () => {
       alert(`Snippet Already Shared with user(${userId})`)
     }})
@@ -95,7 +97,7 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
             <Typography variant="h4" fontWeight={"bold"}>{snippet?.name ?? "Snippet"}</Typography>
             <Box display="flex" flexDirection="row" gap="8px" padding="8px">
               <Tooltip title={"Share"}>
-                <IconButton onClick={() => setShareModalOppened(true)}>
+                <IconButton onClick={() => setShareModalOpened(true)}>
                   <Share/>
                 </IconButton>
               </Tooltip>
@@ -111,7 +113,9 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
                 </IconButton>
               </Tooltip>
               <Tooltip title={"Format"}>
-                <IconButton onClick={() => formatSnippet(code)} disabled={isFormatLoading}>
+                <IconButton
+                    onClick={() => formatSnippet({ snippetContent: code, language: snippet?.language ?? 'printscript' })}
+                    disabled={isFormatLoading}>
                   <ReadMoreIcon />
                 </IconButton>
               </Tooltip>
@@ -144,12 +148,12 @@ export const SnippetDetail = (props: SnippetDetailProps) => {
             </Box>
             <Box pt={1} flex={1} marginTop={2}>
               <Alert severity="info">Output</Alert>
-              <SnippetExecution  content={code} runSnippet={runSnippet} setRunSnippet={setRunSnippet}/>
+              <SnippetExecution  snippet={snippet!} runSnippet={runSnippet} setRunSnippet={setRunSnippet}/>
             </Box>
           </>
         }
-        <ShareSnippetModal loading={loadingShare || isLoading} open={shareModalOppened}
-                           onClose={() => setShareModalOppened(false)}
+        <ShareSnippetModal loading={loadingShare || isLoading} open={shareModalOpened}
+                           onClose={() => setShareModalOpened(false)}
                            onShare={handleShareSnippet}/>
         <TestSnippetModal open={testModalOpened} onClose={() => setTestModalOpened(false)} snippetId={id}/>
         <DeleteConfirmationModal open={deleteConfirmationModalOpen} onClose={() => setDeleteConfirmationModalOpen(false)} id={snippet?.id ?? ""} setCloseDetails={handleCloseModal} />

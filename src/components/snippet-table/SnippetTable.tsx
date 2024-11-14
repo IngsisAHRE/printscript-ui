@@ -44,7 +44,7 @@ export const SnippetTable = (props: SnippetTableProps) => {
   const handleLoadSnippet = async (target: EventTarget & HTMLInputElement) => {
     const files = target.files
     if (!files || !files.length) {
-      createSnackbar('error',"Please select at leat one file")
+      createSnackbar('error',"Please select at least one file")
       return
     }
     const file = files[0]
@@ -79,7 +79,7 @@ export const SnippetTable = (props: SnippetTableProps) => {
           <Box sx={{background: 'white', width: '30%', display: 'flex'}}>
             <InputBase
                 sx={{ml: 1, flex: 1}}
-                placeholder="Search FileType"
+                placeholder="Search by name"
                 inputProps={{'aria-label': 'search'}}
                 onChange={e => handleSearchSnippet(e.target.value)}
             />

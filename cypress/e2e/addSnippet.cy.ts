@@ -1,14 +1,18 @@
-import {BACKEND_URL} from "../../src/utils/constants";
+import {AUTH0_PASSWORD, AUTH0_USERNAME, BACKEND_URL, FRONTEND_URL} from "../../src/utils/constants";
 
 describe('Add snippet tests', () => {
   beforeEach(() => {
-    // cy.loginToAuth0(
-    //     AUTH0_USERNAME,
-    //     AUTH0_PASSWORD
-    // )
+    cy.loginToAuth0(
+        AUTH0_USERNAME,
+        AUTH0_PASSWORD
+    )
+  })
+  before(() => {
+    process.env.FRONTEND_URL = Cypress.env("VITE_FRONTEND_URL");
+    process.env.BACKEND_URL = Cypress.env("VITE_BACKEND_URL");
   })
   it('Can add snippets manually', () => {
-    cy.visit("/")
+    cy.visit(FRONTEND_URL)
     cy.intercept('POST', BACKEND_URL+"/snippets", (req) => {
       req.reply((res) => {
         expect(res.body).to.include.keys("id","name","content","language")
@@ -31,7 +35,7 @@ describe('Add snippet tests', () => {
   })
 
   it('Can add snippets via file', () => {
-    cy.visit("/")
+    cy.visit(FRONTEND_URL)
     cy.intercept('POST', BACKEND_URL+"/snippets", (req) => {
       req.reply((res) => {
         expect(res.body).to.include.keys("id","name","content","language")
@@ -40,7 +44,7 @@ describe('Add snippet tests', () => {
     }).as('postRequest');
 
     /* ==== Generated with Cypress Studio ==== */
-    cy.get('[data-testid="upload-file-input"').selectFile("cypress/fixtures/example_ps.ps", {force: true})
+    cy.get('[data-testid="upload-file-input"').selectFile("cypress/fixtures/example_ps.prs", {force: true})
 
     cy.get('[data-testid="SaveIcon"]').click();
 

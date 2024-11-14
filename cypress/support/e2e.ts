@@ -18,11 +18,16 @@ import './commands'
 import {loginViaAuth0Ui} from "./auth-provider-commands/auth0";
 
 Cypress.Commands.add('loginToAuth0', (username: string, password: string) => {
+
   const log = Cypress.log({
     displayName: 'AUTH0 LOGIN',
     message: [`🔐 Authenticating | ${username}`],
     autoEnd: false,
   })
+  if (localStorage.getItem('auth0_token')) {
+    log.end()
+    return
+  }
   log.snapshot('before')
 
   cy.session(
@@ -34,7 +39,7 @@ Cypress.Commands.add('loginToAuth0', (username: string, password: string) => {
         validate: () => {
           // Validate presence of access token in localStorage.
           cy.wrap(localStorage)
-              .invoke('getItem', 'authAccessToken')
+              .invoke('getItem', 'auth0_token')
               .should('exist')
         },
       }

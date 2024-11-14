@@ -4,8 +4,8 @@ import './index.css'
 import {createRoot} from "react-dom/client";
 import {PaginationProvider} from "./contexts/paginationProvider.tsx";
 import {SnackbarProvider} from "./contexts/snackbarProvider.tsx";
-import { Auth0Provider } from "@auth0/auth0-react";
-import {AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN, FRONTEND_URL } from "./utils/constants.ts";
+import {Auth0Provider} from "@auth0/auth0-react";
+import {AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN, FRONTEND_URL} from "./utils/constants.ts";
 
 createRoot(document.getElementById('root')!).render(
         <React.StrictMode>
@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')!).render(
                     audience: AUTH0_AUDIENCE,
                     scope: "openid profile email write:snippets"
                 }}
-                useRefreshTokens={true}
+                useRefreshTokens={false}
                 cacheLocation="localstorage"
                 onRedirectCallback={(appState) => {
                     window.history.replaceState(
